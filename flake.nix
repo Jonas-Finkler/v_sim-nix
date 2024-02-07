@@ -16,6 +16,9 @@
       in rec {
         packages.${system}.v_sim = pkgs.callPackage ./v_sim {};
         defaultPackage = packages.${system}.v_sim;
+        devShell = pkgs.mkShell {
+          buildInputs = [ defaultPackage ];
+        };
       }
     );
 }

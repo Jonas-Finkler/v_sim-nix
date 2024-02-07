@@ -2,7 +2,7 @@
   v_sim = final.callPackage (import (final.fetchFromGitHub {
     owner = "Jonas-Finkler";
     repo = "v_sim-nix";
-    rev = "88f1c4ddd1db8a567c73937ec2d533fbdb385d18";
-    sha256 = "";
-  }) + "/v_sim") {};
+    rev = "aed0ab192e14e328879db8bb43c98639552155e1";
+    sha256 = "sha256-gOo1m0UvbqLytBjlrQJxew7g/vmKOznThzCBC5PMHjc=";
+  } + "/v_sim/")) {};
 }
