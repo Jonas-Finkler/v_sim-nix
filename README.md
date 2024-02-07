@@ -49,9 +49,9 @@ You can also use the following to automatically download this repository from Gi
       v_sim = final.callPackage (import (final.fetchFromGitHub {
         owner = "Jonas-Finkler";
         repo = "v_sim-nix";
-        rev = "aed0ab192e14e328879db8bb43c98639552155e1";
-        sha256 = "sha256-gOo1m0UvbqLytBjlrQJxew7g/vmKOznThzCBC5PMHjc=";
-      } + "/v_sim/")) {};
+        rev = "979392c78f39a8fc1e62b1a14c8cd97ad33aeaeb";
+        sha256 = "sha256-vRDnBAMEYMWWst9OBj0wH0MG1wG/iqeajeH2DthZHRE=";
+      } + "/v_sim")) {};
     })
 ```
 To update v_sim, replace `rev` with the latest tag or commit of this repository. 
