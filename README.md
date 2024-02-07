@@ -1,6 +1,9 @@
 # v_sim-nix
 This repository aims to help make the atomic visualization software [v_sim](https://l_sim.gitlab.io/v_sim/index.en.html) available under Nix and NixOS.
 
+The file `v_sim/default.nix` will pull v_sim from its [GitLab repository](https://gitlab.com/l_sim/v_sim) and build it using `stdenv.mkDerivation`.  
+There are several options exposed to enable or disable plugins, most of which are enabled by default.
+
 ## Building v_sim
 There are several ways to try out v_sim before you install it permanently.  
 For all options below, you first need to clone this repository and `cd` into it. 
