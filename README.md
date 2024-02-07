@@ -55,7 +55,7 @@ You can also use the following to automatically download this repository from Gi
     })
 ```
 To update v_sim, replace `rev` with the latest tag or commit of this repository. 
-Remember to always replace the sha256 with `""`, otherwise, Nix will still use the last version it downloaded that has the sha256 given. 
+Remember to always replace the sha256 with `""`, otherwise, Nix will still use the last version it downloaded that has the given sha256. 
 
 Once you clear the sha256, nix will complain. 
 ```
@@ -87,7 +87,7 @@ You can then either include v_sim in nixpkgs using an overlay.
         ({
           nixpkgs.overlays = [
             (final: prev: {v_sim = v_sim-nix.packages.${system}.v_sim;})
-          ]
+          ];
         })
       ];
     };
