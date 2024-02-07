@@ -14,19 +14,86 @@ Alternatively you can use `nix develop .`, which will drop you into a shell in w
 
 
 ### Without Flakes
-If you are not using flakes, the process is very similar but you use `nix-build build.nix` to build the package and `nix-shell shell.nix` to access a shell with v_sim available.
+If you are not using flakes, the process is very similar, but you use `nix-build build.nix` to build the package and `nix-shell shell.nix` to access a shell with v_sim available.
 
 
 ## Installing v_sim
 There are multiple options, how you can install v_sim permanently. 
 
-### Using flakes
+### NixOS without flakes
+Overlays allow you to modify nixpkgs in your NixOS installation. 
+We can use them to add v_sim, such that you can simply install v_sim like any other package in your `configuration.nix` (or with home-manager).
+```nix
+  environment.systemPackages = with pkgs; [
+    ...
+    v_sim
+  ];
+```
 
-
-### Using overlays
+There are two possibilities on how you can set up such an overlay.
 #### Manually copying the derivation
+Copy the `v_sim` directory into the folder with your `configuration.nix`.  
+
+Add the following to your `configuration.nix`.
+```nix
+  nixpkgs.overlays = [
+    (final: prev: { v_sim = final.callPackage ./v_sim {};})
+  ];
+```
 
 #### Automatically pulling it from GitHub
+You can also use the following to automatically download this repository from GitHub and avoid manually copying the files.  
+```nix
+  nixpkgs.overlays = [
+    (final: prev: {
+      v_sim = final.callPackage (import (final.fetchFromGitHub {
+        owner = "Jonas-Finkler";
+        repo = "v_sim-nix";
+        rev = "aed0ab192e14e328879db8bb43c98639552155e1";
+        sha256 = "sha256-gOo1m0UvbqLytBjlrQJxew7g/vmKOznThzCBC5PMHjc=";
+      } + "/v_sim/")) {};
+    })
+```
+To update v_sim, replace `rev` with the latest tag or commit of this repository. 
+Remember to always replace the sha256 with `""`, otherwise, Nix will still use the last version it downloaded that has the sha256 given. 
 
+Once you clear the sha256, nix will complain. 
+```
+       error: hash mismatch in fixed-output derivation '/nix/store/fj8fsan3vi3azw9yzmlyp27mm648xzan-source.drv':
+         specified: sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+            got:    sha256-gOo1m0UvbqLytBjlrQJxew7g/vmKOznThzCBC5PMHjc=
+```
+Fix this by copying the new sha256 it gives you into the `configuration.nix`.
+
+
+
+### Flakes based NixOS
+Add this repository to your flake inputs.
+```nix
+  inputs = {
+    ...
+    v_sim-nix.url = "github:Jonas-Finkler/v_sim-nix";
+    v_sim-nix.inputs.nixpkgs.follows = "nixpkgs";
+  }
+```
+
+You can then either include v_sim in nixpkgs using an overlay.
+```nix
+  nixosConfiguration = {
+    "your-hostname" = nixpkgs.lib.nixosSystem rec {
+      system = "x86_64-linux";
+      ...
+      modules = [
+        ({
+          nixpkgs.overlays = [
+            (final: prev: {v_sim = v_sim-nix.packages.${system}.v_sim;})
+          ]
+        })
+      ];
+    };
+  }
+```
+
+Or pass it to your `nixosConfiguration` under `specialArgs` or to your home-manager under `extraSpecialArgs`.
 
 

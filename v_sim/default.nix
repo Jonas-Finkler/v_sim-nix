@@ -98,7 +98,7 @@
     license = licenses.cecill21;
     description = "v_sim - Visualize atomic structures";
     maintainer = "";
-    #platforms = platforms.all; # has not been tested for anything else than x86_64_linux
+    #platforms = platforms.all; # has not been tested for anything else than x86_64-linux
     mainProgram = "v_sim";
     longDescription = ''
       V_Sim visualizes atomic structures such as crystals, grain boundaries, molecules and so on (either in binary format, or in plain text format).
