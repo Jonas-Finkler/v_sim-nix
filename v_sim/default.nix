@@ -44,13 +44,11 @@
   #   url = "https://l_sim.gitlab.io/v_sim/download/v_sim.tar.bz2";
   #   sha256 = "0dw5zm919s97c33c77zqfqfhm8012g1n27hvijiq3l860si1dqnh";
   # };  
-  buildInputs = [ 
-    gtk3
-    libGLU
-    intltool
-    pkg-config
-    libyaml
-    gfortran
+
+  enableParallelBuilding = true;
+
+  # nativeBuildInputs are dependencies that are only needed at build time
+  nativeBuildInputs = [
     wrapGAppsHook 
     makeWrapper
 
@@ -60,10 +58,16 @@
     autoconf
     gtk-doc
     libxslt
-
-    # only needed for the version on the staging branch
-    # cairo
-    # libepoxy
+  ];
+  
+  # buildInputs are the ones that might be linked to the final executable
+  buildInputs = [ 
+    gtk3
+    libGLU
+    intltool
+    pkg-config
+    libyaml
+    gfortran
     ] 
     ++ lib.optional withOpenBabel openbabel2
     ++ lib.optional withEtsfFileFormat netcdf;
@@ -88,9 +92,12 @@
     # "--enable-introspection" # still experimental, don't include it for now
     # "--with-archives"        # not sure what it does
 
-  postInstall = ''
-    # otherwise it will crash under wayland
-    wrapProgram $out/bin/v_sim --set GDK_BACKEND x11  
+  # postInstall = ''
+  #   # otherwise it will crash under wayland
+  #   wrapProgram $out/bin/v_sim --set GDK_BACKEND x11  
+  # '';
+  preFixup = ''
+    gappsWrapperArgs+=(--set GDK_BACKEND x11)
   '';
 
   meta = with lib; {
