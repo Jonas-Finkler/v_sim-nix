@@ -9,7 +9,6 @@
   libyaml,
   gfortran,
   wrapGAppsHook,
-  makeWrapper,
   openbabel2, 
   netcdf,
   libtool,
@@ -20,11 +19,13 @@
   cairo,
   libepoxy,
   cmake,
+  libarchive,
   withCube ? true,
   withOpenBabel ? true,
   withXsf ? true,
   withMsym ? true,
   withEtsfFileFormat ? true,
+  withArchives ? true,
 
 }: stdenv.mkDerivation {
   pname = "v_sim";
@@ -53,7 +54,6 @@
   # nativeBuildInputs are dependencies that are only needed at build time
   nativeBuildInputs = [
     wrapGAppsHook 
-    makeWrapper
 
     # needed for the preConfigure phase when building from gitlab 
     libtool
@@ -79,7 +79,8 @@
     libepoxy
     ] 
     ++ lib.optional withOpenBabel openbabel2
-    ++ lib.optional withEtsfFileFormat netcdf;
+    ++ lib.optional withEtsfFileFormat netcdf
+    ++ lib.optional withArchives libarchive;
 
   preConfigure = ''
     ./autogen.sh
@@ -101,7 +102,7 @@
     # These ones are left out 
     # "--with-strict-cflags"   # this does not compile
     # "--enable-gtk-doc"       # don't need docs (it's meant for developers)
-    # "--enable-introspection" # still experimental, don't include it for now
+    # "--enable-introspection" # still experimental, don't include it for now (might depend on: libgirepository1.0-dev python-gi-dev python3-dev python3-gi)
     # "--with-archives"        # not sure what it does
 
   # will run make check
