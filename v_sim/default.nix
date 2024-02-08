@@ -17,26 +17,29 @@
   autoconf,
   gtk-doc,
   libxslt,
+  cairo,
+  libepoxy,
+  cmake,
   withCube ? true,
   withOpenBabel ? true,
   withXsf ? true,
   withMsym ? true,
   withEtsfFileFormat ? true,
 
-}: stdenv.mkDerivation rec {
+}: stdenv.mkDerivation {
   pname = "v_sim";
-  version = "3.8.0";
+  version = "staging";
 
   src = fetchFromGitLab {
     owner = "l_sim";
     repo = "v_sim";
     # Use this if you want to use the latest commit from the statig branch.
     # Don't forget to reset the hash, otherwise nix will stick with the version that has the specified hash.
-    # rev = "028868150220063856aae36bbbf2c5947c46f745"; 
-    # hash = "sha256-4BdmkguvqZ9uGNiOoS71zjXuH5IP/usPrZAxX6hhEDw=";
+    rev = "028868150220063856aae36bbbf2c5947c46f745"; 
+    hash = "sha256-4BdmkguvqZ9uGNiOoS71zjXuH5IP/usPrZAxX6hhEDw=";
     # 3.8.0
-    rev = "${version}";
-    hash = "sha256-2igDBoEKQkhc2S6ErObYci6Ae3cYtpee5y+ElO3zCqs=";
+    # rev = "${version}";
+    # hash = "sha256-2igDBoEKQkhc2S6ErObYci6Ae3cYtpee5y+ElO3zCqs=";
   };
   # It is also possible to use the tarball from the v_sim website and avoid the autogen
   # src = fetchTarball {
@@ -58,7 +61,11 @@
     autoconf
     gtk-doc
     libxslt
-  ];
+    
+    # for the staging version
+    #cmake
+    ]
+    ++ lib.optional withMsym cmake;
   
   # buildInputs are the ones that might be linked to the final executable
   buildInputs = [ 
@@ -68,6 +75,8 @@
     pkg-config
     libyaml
     gfortran
+    cairo
+    libepoxy
     ] 
     ++ lib.optional withOpenBabel openbabel2
     ++ lib.optional withEtsfFileFormat netcdf;
@@ -79,6 +88,9 @@
   '';
 
   configureScript = "../configure";
+
+  # prevents mkDerivation from messing with cmake flags. Otherwise the Msym plugin will not compile
+  dontUseCmakeConfigure = true;
 
   configureFlags = []
     ++ lib.optional withXsf "--with-xsf"
@@ -92,13 +104,8 @@
     # "--enable-introspection" # still experimental, don't include it for now
     # "--with-archives"        # not sure what it does
 
-  # postInstall = ''
-  #   # otherwise it will crash under wayland
-  #   wrapProgram $out/bin/v_sim --set GDK_BACKEND x11  
-  # '';
-  preFixup = ''
-    gappsWrapperArgs+=(--set GDK_BACKEND x11)
-  '';
+  # will run make check
+  doCheck = true;
 
   meta = with lib; {
     # the original software is published under cecill 1.1, but it seems that it might be okey to redistribute it under follow up licenses?
