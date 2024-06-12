@@ -36,8 +36,8 @@
     repo = "v_sim";
     # Use this if you want to use the latest commit from the statig branch.
     # Don't forget to reset the hash, otherwise nix will stick with the version that has the specified hash.
-    rev = "028868150220063856aae36bbbf2c5947c46f745"; 
-    hash = "sha256-4BdmkguvqZ9uGNiOoS71zjXuH5IP/usPrZAxX6hhEDw=";
+    rev = "0816f29dca18c0f500936c6e7f3c5e687617e682"; 
+    hash = "sha256-+QNK8hXhqHw/WRHBZ2DAuOl2QIAT53YaFUI5qfBHGLg=";
     # 3.8.0
     # rev = "${version}";
     # hash = "sha256-2igDBoEKQkhc2S6ErObYci6Ae3cYtpee5y+ElO3zCqs=";
