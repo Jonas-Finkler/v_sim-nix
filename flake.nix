@@ -15,7 +15,10 @@
         };
         v_sim = pkgs.callPackage ./v_sim {};
       in {
-        packages = { inherit v_sim; };
+        packages = { 
+          default = v_sim;
+          inherit v_sim; 
+        };
         defaultPackage = v_sim;
         devShells.default = pkgs.mkShell {
           buildInputs = [ v_sim ];
